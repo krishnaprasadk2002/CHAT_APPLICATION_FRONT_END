@@ -1,0 +1,46 @@
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+    <div class="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Edit Profile</h3>
+        <button class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="closeModal()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+  
+      <form (ngSubmit)="saveProfile()" class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+          <input id="name" [(ngModel)]="userProfile.name" name="name" class="w-full border-gray-300 rounded-md p-2 focus:border-blue-500 focus:ring-blue-500" />
+        </div>
+  
+        <div>
+          <label for="mobile" class="block text-sm font-medium text-gray-700">Mobile</label>
+          <input id="mobile" [(ngModel)]="userProfile.mobile" name="mobile" class="w-full border-gray-300 rounded-md p-2 focus:border-blue-500 focus:ring-blue-500" />
+        </div>
+  
+        <div>
+          <label for="image" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+          <div class="flex items-center space-x-4">
+            <div *ngIf="userProfile.imageUrl" class="w-20 h-20 rounded-full overflow-hidden">
+              <img [src]="userProfile.imageUrl" class="w-full h-full object-cover" alt="Current Profile Image" />
+            </div>
+            <input type="file" (change)="onImageSelected($event)" class="w-full border-gray-300 rounded-md p-2 focus:border-blue-500 focus:ring-blue-500" />
+            <div *ngIf="profileImage" class="w-20 h-20 rounded-full overflow-hidden">
+              <img [src]="profileImage" class="w-full h-full object-cover" alt="Profile Image Preview" />
+            </div>
+          </div>
+        </div>
+  
+        <div class="flex justify-end space-x-2">
+          <button type="button" (click)="closeModal()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

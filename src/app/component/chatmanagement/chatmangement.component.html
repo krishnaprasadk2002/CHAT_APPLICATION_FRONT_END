@@ -1,0 +1,297 @@
+<div class="container mx-auto px-4 py-6 h-full">
+    <div class="flex h-full bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-1/4 border-r border-gray-200 bg-white">
+        <!-- User Profile -->
+        <div *ngIf="userData.length > 0" class="user-list">
+          <div *ngFor="let user of userData" class="p-4 border-b border-gray-200">
+            <div class="flex items-center space-x-4" (click)="goToUserProfile(user._id)">
+              <!-- Display the user's actual image URL or use a placeholder if not available -->
+              <img 
+                [src]="user.imageUrl ? user.imageUrl : '/assets/placeholder-image.png'" 
+                alt="{{ user.name }}" 
+                class="w-10 h-10 rounded-full" 
+              />
+              <div class="flex-1">
+                <h3 class="text-gray-800 font-semibold">{{ user.name }}</h3>
+                <p class="text-sm text-gray-600">{{ user.email }}</p>
+              </div>
+              <button class="text-gray-500 hover:text-gray-700" aria-label="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        
+     <!-- Search -->
+<div class="p-4 border-b border-gray-200">
+  <div class="relative">
+    <input 
+      type="text" 
+      placeholder="Search chats" 
+      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+      aria-label="Search chats" 
+      [(ngModel)]="searchTerm" 
+      (input)="onSearch($event)" />
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+    </svg>
+  </div>
+</div>
+
+  
+        <!-- Chat List -->
+        <div class="overflow-y-auto h-[calc(100%-160px)] p-4 space-y-2">
+            <!-- User List -->
+            <div *ngFor="let user of Users" class="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-100 cursor-pointer transition-all duration-200" [class.bg-blue-100]="selectedUserId === user._id" (click)="onUserChange(user._id!)">
+              <div class="relative flex-shrink-0">
+                <img [src]="user.imageUrl || '/api/placeholder/48/48'" [alt]="user.name" class="w-12 h-12 rounded-full" />
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              <div class="flex-1 min-w-0 ml-4">
+                <div class="flex items-center justify-between">
+                  <h4 class="text-base font-semibold text-gray-900 truncate">{{ user.name }}</h4>
+                  <span class="text-xs text-gray-500">{{ user.createdAt | date:'short' }}</span>
+                </div>
+                <p class="text-sm text-gray-600 truncate">Last message preview...</p>
+              </div>
+            </div>
+          
+            <!-- Group Chats Section -->
+            <section class="group-chats mt-6">
+              <h2 class="text-lg font-semibold text-gray-800">Group Chats</h2>
+              <ul class="mt-2 space-y-2">
+                <li *ngFor="let group of groupChats" class="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-gray-900">{{ group.groupName }}</h3>
+                    <p class="text-sm text-gray-600">
+                      Members: 
+                      <span *ngFor="let member of group.members; let isLast = last">
+                        {{ member.name }}<span *ngIf="!isLast">, </span>
+                      </span>
+                    </p>
+                  </div>
+                  <button (click)="selectGroupChat(group.chatId)" class="text-blue-500 font-medium hover:underline">Open</button>
+                </li>
+              </ul>
+            </section>
+          
+            <!-- Create Group Button -->
+            <button (click)="openOrCloseNewChatOrGroupChatModal()" class="mt-4 bg-green-500 text-white rounded-lg px-4 py-2 shadow-lg hover:bg-green-600 transition-all duration-200" aria-label="Create Group">
+              Create Group
+            </button>
+          </div>
+          
+      </aside>
+  
+      <!-- Chat Area -->
+      <main class="flex-1 flex flex-col">
+        <!-- Chat Header -->
+        <header class="p-4 border-b border-gray-200 bg-white">
+          <ng-container *ngIf="receiverData[0]">
+            <div class="flex items-center space-x-4">
+              <img *ngIf="receiverData[0]" [src]="receiverData[0].imageUrl || '/api/placeholder/40/40'" [alt]="receiverData[0].name" class="w-10 h-10 rounded-full" />
+              <div class="flex-1">
+                <h3 class="text-gray-800 font-semibold">{{ receiverData[0].name || 'Select a chat' }}</h3>
+                <p class="text-sm text-gray-600">{{ receiverData[0].email || '' }}</p>
+              </div>
+              <div class="flex items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-700" aria-label="More options">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </header>
+  
+        <!-- Messages -->
+<section class="flex-1 overflow-y-auto bg-gray-50 p-4">
+  <div *ngIf="chatHistory.length === 0" class="text-center text-gray-500 py-6">
+    No messages
+  </div>
+
+  <div *ngFor="let message of chatHistory; trackBy: trackByMessageId" class="mb-4">
+    <div [class]="message.senderId === currentUserId ? 'flex justify-end' : 'flex justify-start'">
+      <div [class]="message.senderId === currentUserId ? 'max-w-md bg-blue-500 text-white rounded-lg px-4 py-2' : 'max-w-md bg-white rounded-lg px-4 py-2 shadow'">
+        
+        <div *ngIf="message.senderId !== currentUserId" class="text-xs text-gray-500 mb-1">
+          {{ getUserNameById(message.senderId) }}
+        </div>
+
+        <ng-container [ngSwitch]="message.type">
+          <!-- Text message -->
+          <p *ngSwitchCase="'text'" class="text-sm">{{ message.message }}</p>
+          
+          <!-- Image message -->
+          <div *ngSwitchCase="'image'" class="mt-2">
+            <img [src]="message.file?.url" alt="Image" class="max-w-full rounded-md cursor-pointer" appImageZoom />
+          </div>
+
+          <!-- Video message -->
+          <div *ngSwitchCase="'video'" class="mt-2">
+            <video controls [src]="message.file?.url" class="max-w-full rounded-md"></video>
+          </div>
+
+          <!-- Audio message -->
+          <div *ngSwitchCase="'audio'" class="mt-2">
+            <audio controls [src]="message.file?.url" class="w-full"></audio>
+          </div>
+
+          <!-- Default to text if the type is unrecognized -->
+          <p *ngSwitchDefault class="text-sm">{{ message.message }}</p>
+        </ng-container>
+
+        <div class="text-xs mt-1" [class]="message.senderId === currentUserId ? 'text-blue-100' : 'text-gray-500'">
+          {{ message.createdAt | date:'shortTime' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+        
+        
+  
+    <!-- Chat Input Area -->
+<div class="p-4 bg-white border-t border-gray-200">
+  <div class="flex items-center space-x-4">
+
+    <!-- Attachment Button with Modal Trigger -->
+    <button class="text-gray-500 hover:text-gray-700" (click)="openModal()" aria-label="Add attachment">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+      </svg>
+    </button>
+
+    <!-- Message Input -->
+    <input
+      [(ngModel)]="Message"
+      type="text"
+      placeholder="Type a message..."
+      class="flex-1 pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+      aria-label="Type a message"
+    />
+
+    <!-- Emoji Picker Toggle Button -->
+    <button class="text-gray-500 hover:text-gray-700" (click)="toggleEmojiPicker()" aria-label="Add emoji">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z" clip-rule="evenodd" />
+      </svg>
+    </button>
+
+    <!-- Send Button -->
+    <button (click)="sendMessage()" class="bg-blue-500 text-white rounded-lg px-4 py-2" aria-label="Send message">
+      Send
+    </button>
+  </div>
+
+  <!-- Emoji Picker -->
+  <div *ngIf="showEmojiPicker" class="mt-2">
+    <emoji-mart set="apple" (emojiClick)="addEmoji($event)"></emoji-mart>
+  </div>
+</div>
+
+<!-- Attachment Modal -->
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-75">
+  <div class="bg-white rounded-lg p-6 shadow-lg">
+    <h3 class="text-lg font-medium mb-4">Select Attachment Type</h3>
+    <div class="flex space-x-4">
+      <button (click)="selectAttachmentType('audio')" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+        Audio
+      </button>
+      <button (click)="selectAttachmentType('document')" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+        Document
+      </button>
+      <button (click)="selectAttachmentType('video')" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+        Video
+      </button>
+      <button (click)="selectAttachmentType('image')" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+        Image
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Message and Attachment Input -->
+<div class="p-4 bg-white border-t border-gray-200">
+
+
+  <!-- Hidden File Input for Attachments -->
+  <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none" />
+</div>
+
+        
+
+
+    <!-- group modal -->
+  
+    <div *ngIf="isCreateGroupModalOpen" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full m-4">
+          <h2 class="text-xl font-semibold mb-4">Create Group Chat</h2>
+          
+          <form (ngSubmit)="createNewGroup()">
+            <div class="mb-4">
+                <label for="groupName" class="block text-sm font-medium text-gray-700">Group Name</label>
+                <input 
+                    type="text" 
+                    id="groupName" 
+                    name="groupName"
+                    [(ngModel)]="groupName"
+                    required
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+        
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Users</label>
+                <div class="max-h-48 overflow-y-auto">
+                    <div *ngFor="let user of availableUsers" class="flex items-center mt-2">
+                        <input 
+                            type="checkbox"
+                            [id]="'user-' + user._id"
+                            name="selectedUsers"
+                            [(ngModel)]="user.selected" 
+                            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <label [for]="'user-' + user._id" class="ml-2 text-sm text-gray-700">
+                            {{ user.name }}
+                        </label>
+        
+                        <!-- User Details Display -->
+                        <div *ngIf="user.selected" class="mt-2 p-2 border rounded bg-gray-100">
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            <p><strong>Mobile:</strong> {{ user.mobile }}</p>
+                            <p><strong>Status:</strong> {{ user.status ? 'Active' : 'Inactive' }}</p>
+                            <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="{{ user.name }}'s image" class="w-16 h-16 rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="flex justify-end space-x-2">
+                <button 
+                    type="button"
+                    (click)="openOrCloseNewChatOrGroupChatModal()"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    Cancel
+                </button>
+                <button 
+                    type="submit"
+                    class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    Create Group
+                </button>
+            </div>
+        </form>
+        
+        </div>
+      </div>
+      

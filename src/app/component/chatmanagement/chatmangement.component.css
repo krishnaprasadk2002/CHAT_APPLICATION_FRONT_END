@@ -1,0 +1,9 @@
+:host {
+    display: block;
+    height: 100vh;
+  }
+  
+  .messages-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }

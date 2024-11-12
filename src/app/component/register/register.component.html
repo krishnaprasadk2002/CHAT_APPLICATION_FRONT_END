@@ -1,0 +1,87 @@
+<section class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-lg shadow dark:bg-gray-800 p-8">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Register</h1>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          
+          <!-- Username Field -->
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Username
+            </label>
+            <input id="username" type="text" formControlName="username" 
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" 
+                   placeholder="Enter your name">
+            <div *ngIf="hasError('username', 'required')" class="text-red-500 text-sm">Username is required</div>
+            <div *ngIf="hasError('username', 'alphabetsOnly')" class="text-red-500 text-sm">Only alphabets are allowed</div>
+          </div>
+          
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Email address
+            </label>
+            <input id="email" type="email" formControlName="email"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                   placeholder="name@gmail.com">
+            <div *ngIf="hasError('email', 'required')" class="text-red-500 text-sm">Email is required</div>
+            <div *ngIf="hasError('email', 'email')" class="text-red-500 text-sm">Enter a valid email</div>
+          </div>
+          
+          <!-- Mobile Field -->
+          <div>
+            <label for="mobile" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Mobile Number
+            </label>
+            <input id="mobile" type="text" formControlName="mobile"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                   placeholder="Enter your mobile number">
+            <div *ngIf="hasError('mobile', 'required')" class="text-red-500 text-sm">Mobile number is required</div>
+            <div *ngIf="hasError('mobile', 'mobileNumber')" class="text-red-500 text-sm">Invalid mobile number</div>
+          </div>
+          
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Password
+            </label>
+            <input id="password" type="password" formControlName="password"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                   placeholder="••••••••">
+            <div *ngIf="hasError('password', 'required')" class="text-red-500 text-sm">Password is required</div>
+            <div *ngIf="hasError('password', 'strongPassword')" class="text-red-500 text-sm">Password is too weak</div>
+          </div>
+          
+          <!-- Confirm Password Field -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Confirm Password
+            </label>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword"
+                   class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                   placeholder="Confirm your password">
+            <div *ngIf="hasError('confirmPassword', 'required')" class="text-red-500 text-sm">Confirm password is required</div>
+            <div *ngIf="hasFormError('passwordMismatch')" class="text-red-500 text-sm">Passwords do not match</div>
+          </div>
+  
+       
+          <!-- Submit Button -->
+          <div>
+            <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+              Register
+            </button>
+          </div>
+        </form>
+        
+        <!-- Already have an account? -->
+        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?
+          <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+            Sign in
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+  
